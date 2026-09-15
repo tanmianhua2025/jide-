@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f7f5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="记得" />
+  <title>记得 · 生活提醒</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow" id="todayLabel"></div>
+        <h1>记得</h1>
+      </div>
+      <button class="icon-btn" id="notifyBtn" title="开启通知">🔔</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="hero-title">最近需要你操心的事</p>
+        <div id="urgentList" class="stack"></div>
+      </section>
+
+      <section class="quick-add card">
+        <label for="quickInput">记一件事</label>
+        <div class="input-row">
+          <input id="quickInput" placeholder="例如：15天后买火车票" />
+          <button id="quickAddBtn">添加</button>
+        </div>
+        <div class="chips">
+          <button class="chip" data-fill="15天后买火车票">15天后买火车票</button>
+          <button class="chip" data-fill="30天后换猫咪饮水机滤芯，每30天重复">30天换滤芯</button>
+          <button class="chip" data-fill="10天后买猫粮">10天后买猫粮</button>
+        </div>
+        <p class="hint">支持：明天 / 后天 / X天后 / X周后 / X月后 / 每X天重复 / 每X周重复 / 每X月重复</p>
+      </section>
+
+      <section class="section-head">
+        <h2>待办</h2>
+        <button class="link-btn" id="clearDoneBtn">清理已完成</button>
+      </section>
+      <section id="todoList" class="stack"></section>
+
+      <section class="section-head">
+        <h2>🐱 猫咪管家</h2>
+        <button class="link-btn" id="openCatModal">新增</button>
+      </section>
+      <section id="catList" class="stack"></section>
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab active" data-tab="home">今天</button>
+      <button class="tab" data-tab="add">记一件事</button>
+      <button class="tab" data-tab="cat">猫咪</button>
+    </nav>
+  </div>
+
+  <dialog id="catDialog">
+    <form method="dialog" id="catForm">
+      <h3>新增猫咪用品 / 周期事项</h3>
+      <label>名称<input id="catName" required placeholder="例如：饮水机滤芯"></label>
+      <label>下次日期<input id="catDate" type="date" required></label>
+      <label>重复周期
+        <select id="catCycle">
+          <option value="0">不重复</option>
+          <option value="7">每7天</option>
+          <option value="14">每14天</option>
+          <option value="30">每30天</option>
+          <option value="60">每60天</option>
+          <option value="90">每90天</option>
+        </select>
+      </label>
+      <label>提前提醒（天）<input id="catLead" type="number" min="0" value="5"></label>
+      <label>备注<input id="catNote" placeholder="品牌、规格、库存等"></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="ghost">取消</button>
+        <button id="saveCatBtn" value="default">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="itemTemplate">
+    <article class="item-card">
+      <div class="item-main">
+        <div class="item-title"></div>
+        <div class="item-meta"></div>
+      </div>
+      <div class="item-actions"></div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
