@@ -13,86 +13,95 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
   <title>记得 · 生活提醒</title>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div><div class="eyebrow" id="todayLabel"></div><h1>记得</h1></div>
-      <button class="icon-btn" id="notifyBtn" title="开启通知">🔔</button>
-    </header>
+<div class="app-shell">
+  <header class="topbar">
+    <div><div class="eyebrow" id="todayLabel"></div><h1>记得</h1></div>
+    <button class="icon-btn" id="notifyBtn">🔔</button>
+  </header>
 
-    <main>
-      <section class="card ios-tip" id="iosTip" style="display:none">
-        <div class="tip-title">在 iPhone 上安装成 App</div>
-        <div class="hint">请用 Safari 打开本页 → 分享 → 添加到主屏幕。安装后从桌面打开，即可使用独立 App 模式。</div>
-      </section>
+  <main>
+    <section class="hero">
+      <p class="hero-title">最近需要你操心的事</p>
+      <div id="urgentList" class="stack"></div>
+    </section>
 
-      <section class="hero">
-        <p class="hero-title">最近需要你操心的事</p>
-        <div id="urgentList" class="stack"></div>
-      </section>
+    <section class="quick-grid">
+      <button class="quick-card" data-jump="quickInput"><span>✍️</span><b>记一件事</b><small>一句话快速记录</small></button>
+      <button class="quick-card" id="openTrain"><span>🚄</span><b>火车票</b><small>自动算购票日</small></button>
+      <button class="quick-card" id="openCatModal2"><span>🐱</span><b>猫咪</b><small>用品与周期提醒</small></button>
+    </section>
 
-      <section class="quick-add card">
-        <label for="quickInput">记一件事</label>
-        <div class="input-row">
-          <input id="quickInput" placeholder="例如：15天后买火车票" />
-          <button id="quickAddBtn">添加</button>
-        </div>
-        <div class="chips">
-          <button class="chip" data-fill="15天后买火车票">15天后买火车票</button>
-          <button class="chip" data-fill="30天后换猫咪饮水机滤芯，每30天重复">30天换滤芯</button>
-          <button class="chip" data-fill="10天后买猫粮">10天后买猫粮</button>
-        </div>
-        <p class="hint">支持：明天 / 后天 / X天后 / X周后 / X月后 / 每X天重复 / 每X周重复 / 每X月重复</p>
-      </section>
+    <section class="quick-add card">
+      <label for="quickInput">记一件事</label>
+      <div class="input-row"><input id="quickInput" placeholder="例如：15天后买火车票"><button id="quickAddBtn">添加</button></div>
+      <p class="hint">支持：明天 / 后天 / X天后 / X周后 / X月后 / 每X天重复</p>
+    </section>
 
-      <section class="section-head"><h2>待办</h2><button class="link-btn" id="clearDoneBtn">清理已完成</button></section>
-      <section id="todoList" class="stack"></section>
+    <section class="section-head"><h2>🚄 火车票提醒</h2><button class="link-btn" id="openTrain2">新增</button></section>
+    <section id="trainList" class="stack"></section>
 
-      <section class="section-head"><h2>🐱 猫咪管家</h2><button class="link-btn" id="openCatModal">新增</button></section>
-      <section id="catList" class="stack"></section>
-    </main>
+    <section class="section-head"><h2>待办</h2><button class="link-btn" id="clearDoneBtn">清理已完成</button></section>
+    <section id="todoList" class="stack"></section>
 
-    <nav class="tabbar">
-      <button class="tab active" data-tab="home">今天</button>
-      <button class="tab" data-tab="add">记一件事</button>
-      <button class="tab" data-tab="cat">猫咪</button>
-    </nav>
+    <section class="section-head"><h2>🐱 猫咪管家</h2><button class="link-btn" id="openCatModal">新增</button></section>
+    <section id="catList" class="stack"></section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab active" data-tab="home">今天</button>
+    <button class="tab" data-tab="train">火车票</button>
+    <button class="tab" data-tab="cat">猫咪</button>
+  </nav>
+</div>
+
+<dialog id="trainDialog">
+<form method="dialog" id="trainForm">
+  <h3>🚄 新增火车票提醒</h3>
+  <div class="two-col">
+    <label>出发站<input id="fromStation" required placeholder="例如：北京西"></label>
+    <label>到达站<input id="toStation" placeholder="例如：上海虹桥"></label>
   </div>
+  <label>出发日期<input id="departDate" type="date" required></label>
+  <label class="switch-row"><input id="roundTrip" type="checkbox"> 往返行程</label>
+  <label id="returnDateWrap" style="display:none">返程日期<input id="returnDate" type="date"></label>
+  <div class="two-col">
+    <label>预售期（天）<input id="presaleDays" type="number" min="1" value="15"></label>
+    <label>起售时间<input id="saleTime" type="time" value="09:00"></label>
+  </div>
+  <label>提醒方式
+    <select id="leadPreset">
+      <option value="1">购票日前1天 + 开售当天</option>
+      <option value="0">仅开售当天</option>
+      <option value="3">提前3天 + 开售当天</option>
+    </select>
+  </label>
+  <div class="preview" id="trainPreview">选择出发日期后，这里会显示预计购票日。</div>
+  <p class="hint">默认按15天预售期计算。不同车站起售时间可能不同，请以12306/车站公告为准。</p>
+  <div class="dialog-actions"><button value="cancel" class="ghost">取消</button><button id="saveTrainBtn" value="default">保存提醒</button></div>
+</form>
+</dialog>
 
-  <dialog id="catDialog">
-    <form method="dialog" id="catForm">
-      <h3>新增猫咪用品 / 周期事项</h3>
-      <label>名称<input id="catName" required placeholder="例如：饮水机滤芯"></label>
-      <label>下次日期<input id="catDate" type="date" required></label>
-      <label>重复周期
-        <select id="catCycle">
-          <option value="0">不重复</option><option value="7">每7天</option><option value="14">每14天</option>
-          <option value="30">每30天</option><option value="60">每60天</option><option value="90">每90天</option>
-        </select>
-      </label>
-      <label>提前提醒（天）<input id="catLead" type="number" min="0" value="5"></label>
-      <label>备注<input id="catNote" placeholder="品牌、规格、库存等"></label>
-      <div class="dialog-actions"><button value="cancel" class="ghost">取消</button><button id="saveCatBtn" value="default">保存</button></div>
-    </form>
-  </dialog>
+<dialog id="catDialog">
+<form method="dialog" id="catForm">
+  <h3>新增猫咪用品 / 周期事项</h3>
+  <label>名称<input id="catName" required placeholder="例如：饮水机滤芯"></label>
+  <label>下次日期<input id="catDate" type="date" required></label>
+  <label>重复周期
+    <select id="catCycle"><option value="0">不重复</option><option value="7">每7天</option><option value="14">每14天</option><option value="30">每30天</option><option value="60">每60天</option><option value="90">每90天</option></select>
+  </label>
+  <label>备注<input id="catNote" placeholder="品牌、规格、库存等"></label>
+  <div class="dialog-actions"><button value="cancel" class="ghost">取消</button><button value="default">保存</button></div>
+</form>
+</dialog>
 
-  <template id="itemTemplate">
-    <article class="item-card"><div class="item-main"><div class="item-title"></div><div class="item-meta"></div></div><div class="item-actions"></div></article>
-  </template>
+<template id="itemTemplate">
+  <article class="item-card"><div class="item-main"><div class="item-title"></div><div class="item-meta"></div></div><div class="item-actions"></div></article>
+</template>
 
-  <script src="app.js?v=2"></script>
-  <script>
-    (function(){
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      const standalone = window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
-      if(isIOS && !standalone){
-        const tip=document.getElementById("iosTip");
-        if(tip) tip.style.display="block";
-      }
-    })();
-  </script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
