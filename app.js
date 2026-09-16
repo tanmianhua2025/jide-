@@ -46,3 +46,63 @@ $("#notifyBtn").onclick=async()=>{if(!("Notification"in window)){alert("当前�
 $$(".tab").forEach(b=>b.onclick=()=>{$$(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.tab==="train")$("#trainList").scrollIntoView({behavior:"smooth"});if(b.dataset.tab==="cat")$("#catList").scrollIntoView({behavior:"smooth"});if(b.dataset.tab==="home")window.scrollTo({top:0,behavior:"smooth"})});
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
 render();
+
+
+// ===== V4 自动更新管理 =====
+const APP_VERSION = "4.0.0";
+(function setupAutoUpdate(){
+  const badge = document.getElementById("versionBadge");
+  if (badge) badge.textContent = "V4";
+
+  const toast = document.getElementById("updateToast");
+  const title = document.getElementById("updateTitle");
+  const text = document.getElementById("updateText");
+  const reloadBtn = document.getElementById("updateReloadBtn");
+
+  function showToast(t, m, canReload=false){
+    if(!toast) return;
+    if(title) title.textContent=t;
+    if(text) text.textContent=m;
+    if(reloadBtn){
+      reloadBtn.hidden=!canReload;
+      reloadBtn.onclick=()=>location.reload();
+    }
+    toast.hidden=false;
+  }
+
+  if ("serviceWorker" in navigator) {
+    let reloading = false;
+
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloading) return;
+      reloading = true;
+      showToast("更新完成", "正在切换到新版本…");
+      setTimeout(()=>location.reload(), 350);
+    });
+
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("sw.js", {updateViaCache:"none"});
+        await reg.update();
+
+        // 每次启动都绕过缓存读取版本号
+        const res = await fetch(`version.json?t=${Date.now()}`, {cache:"no-store"});
+        if(res.ok){
+          const latest = await res.json();
+          if(latest.version && latest.version !== APP_VERSION){
+            showToast("发现新版本", `V${latest.version} 已发布，正在准备更新…`);
+            await reg.update();
+            if(reg.waiting) reg.waiting.postMessage({type:"SKIP_WAITING"});
+            else {
+              setTimeout(()=>{
+                showToast("新版已准备好", "如未自动刷新，可点此立即更新。", true);
+              }, 1200);
+            }
+          }
+        }
+      } catch (err) {
+        console.log("自动更新检查失败：", err);
+      }
+    });
+  }
+})();

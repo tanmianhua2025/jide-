@@ -13,14 +13,14 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
   <title>记得 · 生活提醒</title>
 </head>
 <body>
 <div class="app-shell">
   <header class="topbar">
     <div><div class="eyebrow" id="todayLabel"></div><h1>记得</h1></div>
-    <button class="icon-btn" id="notifyBtn">🔔</button>
+    <div class="header-actions"><span class="version-badge" id="versionBadge">V4</span><button class="icon-btn" id="notifyBtn">🔔</button></div>
   </header>
 
   <main>
@@ -102,6 +102,15 @@
   <article class="item-card"><div class="item-main"><div class="item-title"></div><div class="item-meta"></div></div><div class="item-actions"></div></article>
 </template>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
+
+<div class="update-toast" id="updateToast" hidden>
+  <div>
+    <b id="updateTitle">发现新版本</b>
+    <div class="update-text" id="updateText">正在更新「记得」…</div>
+  </div>
+  <button id="updateReloadBtn" hidden>立即刷新</button>
+</div>
+
 </body>
 </html>

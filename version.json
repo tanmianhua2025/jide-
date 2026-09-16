@@ -1,0 +1,6 @@
+{
+  "version": "4.0.0",
+  "name": "自动更新版",
+  "released": "2026-09-16",
+  "notes": "新增自动版本检测、Service Worker 自动接管和缓存更新机制。"
+}
