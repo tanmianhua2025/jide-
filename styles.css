@@ -7,3 +7,10 @@
 .update-toast[hidden]{display:none}
 .update-toast b{font-size:14px}.update-text{font-size:12px;opacity:.78;margin-top:3px}
 .update-toast button{border:0;background:white;color:#1f2b27;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:750}
+
+.cat-type-tag{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:#eef1f4;color:#66707a;font-size:10px}
+.prediction-box{margin-top:8px;padding:8px 10px;border-radius:12px;background:var(--accent-soft);color:var(--accent);font-size:12px;line-height:1.45}
+.record-item-name{font-weight:800;font-size:18px;margin:4px 0 12px}
+.history-list{display:grid;gap:8px;max-height:45vh;overflow:auto}
+.history-row{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#f7f7f4;border-radius:12px;font-size:13px}
+.history-row small{color:var(--muted)}

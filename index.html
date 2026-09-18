@@ -13,14 +13,14 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <title>记得 · 生活提醒</title>
 </head>
 <body>
 <div class="app-shell">
   <header class="topbar">
     <div><div class="eyebrow" id="todayLabel"></div><h1>记得</h1></div>
-    <div class="header-actions"><span class="version-badge" id="versionBadge">V4</span><button class="icon-btn" id="notifyBtn">🔔</button></div>
+    <div class="header-actions"><span class="version-badge" id="versionBadge">V5</span><button class="icon-btn" id="notifyBtn">🔔</button></div>
   </header>
 
   <main>
@@ -32,7 +32,7 @@
     <section class="quick-grid">
       <button class="quick-card" data-jump="quickInput"><span>✍️</span><b>记一件事</b><small>一句话快速记录</small></button>
       <button class="quick-card" id="openTrain"><span>🚄</span><b>火车票</b><small>自动算购票日</small></button>
-      <button class="quick-card" id="openCatModal2"><span>🐱</span><b>猫咪</b><small>用品与周期提醒</small></button>
+      <button class="quick-card" id="openCatModal2"><span>🐱</span><b>猫咪</b><small>记录消耗并自动预测</small></button>
     </section>
 
     <section class="quick-add card">
@@ -85,24 +85,61 @@
 </form>
 </dialog>
 
+
 <dialog id="catDialog">
 <form method="dialog" id="catForm">
-  <h3>新增猫咪用品 / 周期事项</h3>
-  <label>名称<input id="catName" required placeholder="例如：饮水机滤芯"></label>
-  <label>下次日期<input id="catDate" type="date" required></label>
-  <label>重复周期
-    <select id="catCycle"><option value="0">不重复</option><option value="7">每7天</option><option value="14">每14天</option><option value="30">每30天</option><option value="60">每60天</option><option value="90">每90天</option></select>
+  <h3>🐱 新增猫咪用品</h3>
+  <label>用品名称<input id="catName" required placeholder="例如：猫粮、猫罐头、猫砂、滤芯"></label>
+  <label>类型
+    <select id="catType">
+      <option value="consumable">消耗型用品（自动预测）</option>
+      <option value="fixed">固定周期事项</option>
+    </select>
   </label>
-  <label>备注<input id="catNote" placeholder="品牌、规格、库存等"></label>
+  <div id="consumableFields">
+    <label>第一次记录日期<input id="catFirstDate" type="date" required></label>
+    <label>提前提醒（天）<input id="catLeadDays" type="number" min="0" value="5"></label>
+    <p class="hint">第一次只记录实际购买/更换时间；第二次再记录后，系统会自动计算间隔并预测下一次。</p>
+  </div>
+  <div id="fixedFields" style="display:none">
+    <label>下一次日期<input id="catFixedDate" type="date"></label>
+    <label>固定周期
+      <select id="catCycle">
+        <option value="7">每7天</option><option value="14">每14天</option><option value="30" selected>每30天</option>
+        <option value="60">每60天</option><option value="90">每90天</option><option value="180">每180天</option>
+      </select>
+    </label>
+  </div>
+  <label>备注<input id="catNote" placeholder="品牌、规格、用途等"></label>
   <div class="dialog-actions"><button value="cancel" class="ghost">取消</button><button value="default">保存</button></div>
 </form>
 </dialog>
+
+<dialog id="catRecordDialog">
+<form method="dialog" id="catRecordForm">
+  <h3>记录一次</h3>
+  <div class="record-item-name" id="catRecordName"></div>
+  <label>本次日期<input id="catRecordDate" type="date" required></label>
+  <label>备注<input id="catRecordNote" placeholder="例如：买了2袋、换了新滤芯"></label>
+  <input type="hidden" id="catRecordId">
+  <div class="dialog-actions"><button value="cancel" class="ghost">取消</button><button value="default">保存记录</button></div>
+</form>
+</dialog>
+
+<dialog id="catHistoryDialog">
+<form method="dialog">
+  <h3 id="catHistoryTitle">记录历史</h3>
+  <div id="catHistoryList" class="history-list"></div>
+  <div class="dialog-actions"><button value="cancel" class="ghost">关闭</button></div>
+</form>
+</dialog>
+
 
 <template id="itemTemplate">
   <article class="item-card"><div class="item-main"><div class="item-title"></div><div class="item-meta"></div></div><div class="item-actions"></div></article>
 </template>
 
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 
 <div class="update-toast" id="updateToast" hidden>
   <div>
